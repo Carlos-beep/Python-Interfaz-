@@ -1,0 +1,740 @@
+<Login>:                                    ### VENTANA CON FORMULARIO INICIAL
+    name: "login"                   ### NOMBRE DE LA VENTANA
+    email: email
+    password: password
+    canvas.before:                                
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: "azul.jpg"           ### DEFINE EL FONDO
+    FloatLayout:
+        Image:
+            source: "avatar.png"        ### INSERTAMOS IMAGEN FLOTANTE
+            size_hint: 0.25, 0.25
+            pos_hint: {"x":0.6, "top":.97}
+            allow_stretch: True
+        TextInput:                           ### ENTRADA DE TEXTO PARA USER ID
+            id: email
+            hint_text: "   User ID"
+            multiline: False
+            size_hint: 0.24, 0.1
+            pos_hint: {"x": 0.6 , "top":0.66}
+            font_size: (root.width**2 + root.height**2) / 14**4
+        TextInput:                         ### ENTRADA DE TEXTO PARA CONTRASEÑA
+            id: password
+            hint_text: "   Password"
+            multiline: False
+            password: True
+            size_hint: 0.24, 0.1
+            pos_hint: {"x": 0.6, "top":0.49}
+            font_size: (root.width**2 + root.height**2) / 14**4
+        Button:                                   ### BOTON PARA INICIAR SESION
+            id: boton
+            background_normal: "start_btn.png"             
+            size_hint: 0.18, 0.31
+            pos_hint:{"x":0.63,"top":0.35}
+            on_release:
+                root.loginBtn()  
+                root.manager.transition.direction = "up"
+        Image:                          ### INSERTAMOS IMAGEN FLOTANTE
+            source: "protonics.png"
+            size_hint: 0.35, 0.5
+            pos_hint: {"x":0.1, "top": 0.5}
+            allow_stretch: True 
+        Image:                          ### INSERTAMOS IMAGEN FLOTANTE
+            source: "mecatronica.png"
+            size_hint: 0.35, 0.5
+            pos_hint: {"x":0.1, "top": 0.9}
+            allow_stretch: True          
+        Button:                                   ### BOTON PARA INFORMACION
+            id: info
+            background_normal: "gear_blue.png"                
+            size_hint: 0.11, 0.18
+            pos_hint:{"x":0.01 ,"top": 0.98}
+            on_release:
+                app.root.current = "informa"
+                root.manager.transition.direction = "up"
+
+##############################################################################
+<Main>:                                        ### VENTANA DEL PROCESO GENERAL
+    canvas.before:                                
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: "azul.jpg"                   ### DEFINE EL FONDO
+    FloatLayout:         
+        NavigationDrawer:
+            id: nav
+            anim_type: 'slide_above_anim'
+            BoxLayout:
+                orientation: 'vertical'
+                Label:
+                    text: ""
+                    font_size: (root.width**2 + root.height**2) / 16**4
+                Image:
+                    source: 'protonics.png'
+                Image:
+                    source: 'lock.png'
+                Label:
+                    id: permisos
+                    markup: True
+                    text: "[color=#00FFFA]nomood[/color]"
+                    font_size: (root.width**2 + root.height**2) / 18**4
+                Label:
+                    id: Sesion_actual
+                    markup: True
+                    text: "[color=#00FFFA][/color]"
+                    font_size: (root.width**2 + root.height**2) / 15**4
+                Image:
+                    source: 'file.png'
+                Label:
+                    id: nombre
+                    font_size: (root.width**2 + root.height**2) / 16**4
+                Label:
+                    id: area
+                    markup: True
+                    text: "[color=#00FFFA].[/color]"
+                    font_size: (root.width**2 + root.height**2) / 16**4
+                Label:
+                    id: hora
+                    font_size: (root.width**2 + root.height**2) / 16**4
+                Image:
+                    source: 'clock.png'
+                Label:
+                    id: fecha
+                    font_size: (root.width**2 + root.height**2) / 16**4
+                Label:
+                    text: ""
+                    font_size: (root.width**2 + root.height**2) / 16**4
+                Button:
+                    text: "Cerrar Sesion"
+                    background_color: 1, 0, 0, 1   ### COLOR ROJO
+                    font_size: (root.width**2 + root.height**2) / 15**4
+                    #background_normal: "exitl.png"
+                    on_release:
+                        #root.Dcom()
+                        #root.cambio_f()
+                        nav.toggle_state()
+                        app.root.current = "login"
+                        root.manager.transition.direction = "down"
+                Button:
+                    text: "Acerca de ..."
+                    background_color: .5, .5, 1, 1      ### COLOR AZUL
+                    font_size: (root.width**2 + root.height**2) / 17**4
+                    width: '10dp'
+                    #background_normal: "exitl.png"  
+                    on_release:  
+                        nav.toggle_state()
+                        app.root.current = "informa"
+                        root.manager.transition.direction = "left"
+            
+            BoxLayout:
+                orientation: 'vertical'
+                ActionBar:
+                    ActionView:
+                        ActionPrevious:
+                            #color: (.5, 1, 1, 1)
+                            app_icon: 'usee2.png'
+                            title:'Proceso General'
+                            on_release:
+                                root.NavDrawer()
+                                nav.toggle_state()    
+                Label:
+                    text: ""                        
+        Label:                                  ### ETIQUETA TEMPERATURA
+            markup: True
+            text: "[color=#FFFF00]TEMPERATURA:[/color]"
+            font_size: (root.width**2 + root.height**2) / 17**4
+            pos_hint: {"x": 0.28, "top":.85}                       
+            size_hint: 0.35, 0.15
+        Label:                               ### MOSTRAR DATO DE TEMPERATURA
+            id: dato_t
+            markup: True
+            text: "[color=#FFFF00]Esperando ...[/color]"
+            font_size: (root.width**2 + root.height**2) / 16**4
+            pos_hint: {"x": 0.36, "top":.85}
+            size_hint: 0.35, 0.15
+        Label:                                           ### ETIQUETA PRESION
+            markup: True
+            text: "[color=#7800FF]PRESION:[/color]"
+            font_size: (root.width**2 + root.height**2) / 17**4
+            pos_hint: {"x": 0.28, "top":0.7}
+            size_hint: 0.35, 0.15
+        Label:                                    ### MOSTRAR DATO DE PRESION
+            id: dato_p
+            markup: True
+            text: "[color=#7800FF]Esperando ...[/color]"
+            font_size: (root.width**2 + root.height**2) / 16**4
+            pos_hint: {"x": 0.36, "top":0.7}
+            size_hint: 0.35, 0.15
+        Label:                                         ### ETIQUETA VIBRACION
+            markup: True
+            text: "[color=#FF0000]VIBRACION:[/color]"
+            font_size: (root.width**2 + root.height**2) / 17**4
+            pos_hint: {"x": 0.28, "top":0.55}
+            size_hint: 0.35, 0.15
+        Label:                                  ### MOSTRAR DATO DE VIBRACION
+            id: dato_v
+            markup: True
+            text: "[color=#FF0000]Esperando ...[/color]"
+            font_size: (root.width**2 + root.height**2) / 16**4
+            pos_hint: {"x": 0.36, "top":0.55}
+            size_hint: 0.35, 0.15    
+        Label:                                          ### ETIQUETA BOLSAS
+            markup: True
+            text: "[color=#00FF00]BOLSAS:[/color]"
+            font_size: (root.width**2 + root.height**2) / 17**4
+            pos_hint: {"x": 0.28, "top":0.4}
+            size_hint: 0.35, 0.15
+        Label:                                    ### MOSTRAR DATO DE BOLSAS
+            id: dato_b
+            markup: True
+            text: "[color=#00FF00]Esperando...[/color]"
+            font_size: (root.width**2 + root.height**2) / 16**4
+            pos_hint: {"x": 0.36, "top":0.4}
+            size_hint: 0.35, 0.15    
+        Label:                                          ### ETIQUETA AGUA
+            markup: True
+            text: "[color=#00FFFA]AGUA:[/color]"
+            font_size: (root.width**2 + root.height**2) / 17**4
+            pos_hint: {"x": 0.28, "top":0.25}
+            size_hint: 0.35, 0.15
+        Label:                                        ### MOSTRAR DATO DE AGUA
+            id: dato_a
+            markup: True
+            text: "[color=#00FFFA]Esperando ...[/color]"
+            font_size: (root.width**2 + root.height**2) / 16**4
+            pos_hint: {"x": 0.36, "top":0.25}
+            size_hint: 0.35, 0.15           
+#-------------------------------------------------BOTONES PARA IR A OTRO PROCESO
+        Button:                                 ### BOTON IR A
+            #background_color: .5, 1, 1, 1   ### COLOR AQUA
+            background_normal: "cajones.png"               
+            id: btn
+            #text: 'Ir a'
+            size_hint_x: .09
+            size_hint_y: .145
+            height: '90dp'
+            pos_hint: {"x": .9, "top":0.15}
+            font_size: (root.width**2 + root.height**2) / 16**4
+            on_parent: dd.dismiss(self)
+            on_release: 
+                dd.open(self)
+                root.manager.transition.direction = "up"
+        BoxLayout:
+        DropDown:                                  ### MENU DESPLEGABLE
+            id: dd
+            on_select: btn.text = '{}'.format(args[1])
+            Button:                                       ### IR A LAVADORA
+                background_normal: "ciclus.png" 
+                size_hint_y: None
+                size_hint_x: None
+                height: '95dp'
+                #background_color: .5, .5, 1, 1      ### COLOR AZUL
+                #on_parent: dd.dismiss(self)
+                on_release:
+                    dd.dismiss(self) 
+                    app.root.current = "lava"
+                    root.manager.transition.direction = "up"
+            Button:                                   ### IR A REBOBINADORA
+                background_normal: "gear_b.png" 
+                size_hint_y: None
+                size_hint_x: None
+                height: '90dp'
+                #background_color: 0, 0, 1, 1   ### COLOR AZUL
+                on_release:
+                    dd.dismiss(self)  
+                    app.root.current = "bob"
+                    root.manager.transition.direction = "left"
+            Button:                                     ### IR A EMPLAYADORA
+                background_normal: "flag.png" 
+                size_hint_y: None
+                size_hint_x: None
+                height: '90dp'
+                #background_color: 1, 1, 1, 1   ### COLOR MORADO
+                on_release:
+                    dd.dismiss(self)
+                    app.root.current = "emp"
+                    root.manager.transition.direction = "right"
+            Button:                                      ### IR A REGISTRAR
+                background_normal: "loaded.png" 
+                size_hint_x: None
+                size_hint_y: None             
+                height: '95dp'
+                #background_color: 0, 1, 0, 1      ### COLOR VERDE
+                on_release:
+                    dd.dismiss(self)
+                    root.WgoC()
+                    #app.root.current = "confirma2"
+                    root.manager.transition.direction = "down"
+            Button:                                        ### IR A BORRAR
+                background_normal: "remove.png" 
+                size_hint_y: None
+                size_hint_x: None
+                height: '95dp'
+                #background_color: 1, 0, 0, 1   ### COLOR ROJO
+                on_release:
+                    dd.dismiss(self)
+                    root.WgoD()
+                    #app.root.current = "confirma"
+                    root.manager.transition.direction = "up"
+#-------------------------------------------BOTONES CONTROLAR EL PROCESO GENERAL
+        Button:                             ### BOTON INICIAR                                
+            id: boton
+            pos_hint:{"x": 0.75, "y": 0}
+            size_hint:0.1, 0.16
+            background_normal: "ini.png" 
+            on_release:
+                root.cambio_t()
+                #root.Scom()
+                root.inicio()
+        Button:                           ### BOTON DETENER
+            id: detiene
+            pos_hint:{"x": 0.65, "y": 0}
+            size_hint:0.1, 0.16
+            background_normal: "par.png" 
+            on_release:
+                root.cambio_f()
+                #root.Dcom()
+        Button:                             ### BOTON SALIR
+            pos_hint:{"x": 0.9, "y": 0.91}
+            size_hint:0.08, 0.11
+            background_normal: "openlock.png" 
+            on_release:
+                #root.Dcom()
+                root.cambio_f()
+                app.root.current = "login"
+                root.manager.transition.direction = "down"
+####################################################################################
+<Lavadora>:                                   ### VENTANA DE PROCESO LAVADORA
+    name: "lava"
+    canvas.before:                                
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: "puntos.jpg"             ### DEFINE EL FONDO
+    BoxLayout:    
+        orientation: 'vertical'           
+        ActionBar:
+            ActionView:
+                ActionPrevious:
+                    app_icon: 'ciclus.png'
+                    title:'Lavadora'
+                    on_release:
+                        #root.Dcom()
+                        root.cambio_f()
+                        app.root.current = "main"
+                        root.manager.transition.direction = "down"    
+        Label:
+            id: screen
+            text: ""
+    FloatLayout:
+        Label:                                       ### ETIQUETA TEMPERATURA
+            markup: True
+            text: "[color=#FFFF00]TEMPERATURA:[/color]"
+            font_size: (root.width**2 + root.height**2) / 17**4
+            pos_hint: {"x": 0.24, "top":.85}                       
+            size_hint: 0.35, 0.15
+        Label:                               ### DATO DE TEMPERATURA
+            id: dato_t
+            markup: True
+            text: "[color=#FFFF00]Esperando ...[/color]"
+            font_size: (root.width**2 + root.height**2) / 16**4
+            pos_hint: {"x": 0.37, "top":.85}
+            size_hint: 0.35, 0.15
+        Label:                                    ### ETIQUETA VIBRACION
+            markup: True
+            text: "[color=#00FFF0]VIBRACION:[/color]"
+            font_size: (root.width**2 + root.height**2) / 17**4
+            pos_hint: {"x": 0.25, "top":0.7}
+            size_hint: 0.35, 0.15
+        Label:                                     ### DATO DE VIBRACION
+            id: dato_v
+            markup: True
+            text: "[color=#00FFF0]Esperando ...[/color]"
+            font_size: (root.width**2 + root.height**2) / 16**4
+            pos_hint: {"x": 0.37, "top":0.7}
+            size_hint: 0.35, 0.15
+        Label:                                              ### ETIQUETA AGUA
+            markup: True
+            text: "[color=#4AFF00]AGUA:[/color]"
+            font_size: (root.width**2 + root.height**2) / 17**4
+            pos_hint: {"x": 0.25, "top":0.55}
+            size_hint: 0.35, 0.15
+        Label:                                          ### MOSTRAR DATO DE AGUA
+            id: dato_a
+            markup: True
+            text: "[color=#4AFF00]Esperando ...[/color]"
+            font_size: (root.width**2 + root.height**2) / 16**4
+            pos_hint: {"x": 0.37, "top":0.55}
+            size_hint: 0.35, 0.15
+#------------------------------------------------------------------CONTROL DE PROCESO
+        Button:                                                 ### INICIAR PROCESO DE LAVADO
+            id: boton
+            pos_hint:{"x": 0.0, "y": 0.7}
+            size_hint:0.1, 0.16
+            background_normal: "ini.png"           
+            on_release:
+                root.cambio_t()
+                #root.Scom()
+                root.inicio()
+        Button:                                                 ### BOTON DETENER PROCESO DE LAVADO
+            id: detiene
+            pos_hint:{"x": 0, "y": 0.5}
+            size_hint:0.1, 0.16
+            background_normal: "par.png" 
+            on_release:
+                root.cambio_f()
+                #root.Dcom()
+####################################################################################
+<Bobina>:                                      ### VENTANA DE PROCESO REEMBOBINADORA
+    name: "bob"
+    canvas.before:                                
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: "puntos.jpg"                                ### DEFINE EL FONDO
+    BoxLayout:    
+        orientation: 'vertical'           
+        ActionBar:
+            ActionView:
+                ActionPrevious:
+                    app_icon: 'gear_b.png'
+                    title:'Rebobinadora'
+                    on_release:
+                        #root.Dcom()
+                        root.cambio_f()
+                        app.root.current = "main"
+                        root.manager.transition.direction = "down"    
+        Label:
+            id: screen
+            text: ""
+    FloatLayout:
+        Label:                                              ### ETIQUETA BOLSAS
+            markup: True
+            text: "[color=#4AFF00]BOLSAS:[/color]"
+            font_size: (root.width**2 + root.height**2) / 17**4
+            pos_hint: {"x": 0.25, "top":0.85}
+            size_hint: 0.35, 0.15
+        Label:                                          ### MOSTRAR DATO DE BOLSAS
+            id: dato_b
+            markup: True
+            text: "[color=#4AFF00]Esperando ...[/color]"
+            font_size: (root.width**2 + root.height**2) / 16**4
+            pos_hint: {"x": 0.37, "top":0.85}
+            size_hint: 0.35, 0.15
+        Label:                                              ### ETIQUETA VIBRACION
+            markup: True
+            text: "[color=#FFFF00]VIBRACION:[/color]"
+            font_size: (root.width**2 + root.height**2) / 17**4
+            pos_hint: {"x": 0.25, "top":0.7}
+            size_hint: 0.35, 0.15
+        Label:                                          ### MOSTRAR DATO DE VIBRACION
+            id: dato_v
+            markup: True
+            text: "[color=#FFFF00]Esperando ...[/color]"
+            font_size: (root.width**2 + root.height**2) / 16**4
+            pos_hint: {"x": 0.37, "top":0.7}
+            size_hint: 0.35, 0.15
+#----------------------------------------------------------------CONTROL DE PROCESO
+        Button:                                              ### INICIAR PROCESO DE REEMBOBINADO
+            id: boton
+            pos_hint:{"x": 0.0, "y": 0.7}
+            size_hint:0.1, 0.16
+            background_normal: "ini.png"
+            on_release:
+                root.cambio_t()
+                #root.Scom()
+                root.inicio()
+        Button:                                          ### BOTON DETENER PROCESO DE REEMBOBINADO
+            id: detiene
+            pos_hint:{"x": 0, "y": 0.5}
+            size_hint:0.1, 0.16
+            background_normal: "par.png" 
+            on_release:
+                root.cambio_f()
+                #root.Dcom()
+####################################################################################
+<Emplaye>:                                            ### VENTANA DE PROCESO EMPLAYE
+    name: "emp"
+    canvas.before:                                
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: "puntos.jpg"                                ### DEFINE EL FONDO
+    BoxLayout:    
+        orientation: 'vertical'           
+        ActionBar:
+            ActionView:
+                ActionPrevious:
+                    app_icon: 'flag.png'
+                    title:'Emplayadora'
+                    on_release:
+                        #root.Dcom()
+                        root.cambio_f()
+                        app.root.current = "main"
+                        root.manager.transition.direction = "down"    
+        Label:
+            id: screen
+            text: ""
+    FloatLayout:
+        Label:                                              ### ETIQUETA BOLSAS
+            markup: True
+            text: "[color=#4AFF00]ROLLO:[/color]"
+            font_size: (root.width**2 + root.height**2) / 17**4
+            pos_hint: {"x": 0.25, "top":0.85}
+            size_hint: 0.35, 0.15
+        Label:                                          ### MOSTRAR DATO DE BOLSAS
+            id: dato_r
+            markup: True
+            text: "[color=#4AFF00]Esperando ...[/color]"
+            font_size: (root.width**2 + root.height**2) / 16**4
+            pos_hint: {"x": 0.37, "top":0.85}
+            size_hint: 0.35, 0.15
+        Button:                                              ### INICIAR PROCESO DE EMPLAYE
+            id: boton
+            pos_hint:{"x": 0.0, "y": 0.7}
+            size_hint:0.1, 0.16
+            background_normal: "ini.png" 
+            on_release:
+                root.cambio_t()
+                #root.Scom()
+                root.inicio()
+        Button:                                          ### BOTON DETENER PROCESO DE EMPLAYE
+            id: detiene
+            pos_hint:{"x": 0, "y": 0.5}
+            size_hint:0.1, 0.16
+            background_normal: "par.png" 
+            on_release:
+                root.cambio_f()
+                #root.Dcom()
+####################################################################################
+<Confirma>:                                    ### VENTANA PERMISOS DE ADMINISTRADOR BORRAR
+    name: "confirma"
+    contra: contra
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: "moral.jpg"                     ### DEFINE EL FONDO         
+    FloatLayout:
+        Image:
+            source: "lock_key.png"
+            size_hint: 0.3, 0.3
+            pos_hint: {"x":0.36, "top":.97}
+            allow_stretch: True
+        TextInput:
+            id: contra
+            size_hint: 0.5, 0.15
+            pos_hint: {"x":0.25, "top":0.62}
+            hint_text: "  Admin Key"
+            multiline: False
+            password: True
+            font_size: (root.width**2 + root.height**2) / 12**4
+        Button:                                                 ####BOTON ACEPTAR
+            background_normal: "mano_llave.png" 
+            size_hint:0.15,0.22
+            pos_hint:{"x": 0.25, "y": 0.14}
+            on_release:
+                root.confirma()
+                root.reset()
+                root.manager.transition.direction = "down"
+        Button:                                                 ####BOTON REGRESAR
+            background_normal: "casa.png"
+            pos_hint:{"x": 0.6, "y": 0.14}
+            size_hint:0.14, 0.2
+            on_release:
+                root.reset()
+                app.root.current = "main"
+                root.manager.transition.direction = "down"
+####################################################################################
+<Confirma2>:                                    ### VENTANA PERMISOS DE ADMINISTRADOR REGISTRAR
+    name: "confirma"
+    contra: contra
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: "moral.jpg"                     ### DEFINE EL FONDO         
+    FloatLayout:
+        Image:
+            source: "cloud_candado.png"
+            size_hint: 0.5, 0.3
+            pos_hint: {"x":0.25, "top":.95}
+            allow_stretch: True
+        TextInput:
+            id: contra
+            size_hint: 0.5, 0.15
+            pos_hint: {"x":0.25, "top":0.6}
+            hint_text: "  Admin Key"
+            multiline: False
+            password: True
+            font_size: (root.width**2 + root.height**2) / 12**4
+        Button:                                                 ####BOTON ACEPTAR
+            background_normal: "mano_llave.png" 
+            size_hint:0.15,0.22
+            pos_hint:{"x": 0.25, "y": 0.14}
+            on_release:
+                root.confirma2()
+                root.reset()
+                root.manager.transition.direction = "down"
+        Button:                                                 ####BOTON REGRESAR
+            background_normal: "casa.png"
+            pos_hint:{"x": 0.6, "y": 0.14}
+            size_hint:0.14,0.2
+            on_release:
+                root.reset()
+                app.root.current = "main"
+                root.manager.transition.direction = "down"
+####################################################################################
+<Borrar>:                                           ### VENTANA PARA BORRAR USUARIOS
+    name: "borrar"
+    dele: dele
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: "rey.jpg"                                 ### DEFINE EL FONDO
+    FloatLayout:
+        Image:
+            source: "del_user.png"
+            size_hint: 0.25, 0.25
+            pos_hint: {"x":0.35, "top":.95}
+            allow_stretch: True
+        TextInput:                                      ### USUARIO A ELIMINAR
+            id: dele
+            size_hint: 0.5, 0.15
+            pos_hint: {"x":0.25, "top":0.6}
+            hint_text: "  User ID"
+            multiline: False
+            password: True
+            font_size: (root.width**2 + root.height**2) / 12**4
+        Button:                                                ####BOTON BORRAR
+            background_normal: "like.png"                
+            pos_hint:{"x": 0.25, "y": 0.17}
+            size_hint:0.12, 0.2
+            on_release:
+                root.manager.transition.direction = "down"
+                root.quitar()
+                root.reset()
+        Button:                                            ####BOTON REGRESAR
+            background_normal: "casa.png"                
+            pos_hint:{"x": 0.6, "y": 0.17}
+            size_hint:0.14, 0.2
+            on_release:
+                root.reset()
+                app.root.current = "main"
+                root.manager.transition.direction = "down"
+###############################################################################
+<Create>:                            ### VENTANA PARA CREAR CUENTA
+    name: "create"  # NOMBRE DE LA VENTANA
+    namee: namee
+    email: email
+    password: passw
+    area: area
+    check: chk
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: "rey.jpg"             ### DEFINE EL FONDO
+    FloatLayout:
+        Image:
+            source: "add_u.png"
+            size_hint: 0.25, 0.25
+            pos_hint: {"x":0.35, "top":.97}
+            allow_stretch: True
+                 
+        TextInput:                                      ### ENTRADA DE TEXTO PARA INGRESAR EL NOMBRE
+            id: namee
+            hint_text: "   Ingrese el Nombre"
+            size_hint: 0.41, 0.11
+            multiline: False
+            pos_hint: {"x":0.1, "top":0.65}
+            font_size: (root.width**2 + root.height**2) / 14**4
+                                
+        TextInput:                                      ### ENTRADA DE TEXTO PARA USER ID
+            id: email
+            hint_text: "   Ingrese el User ID*"
+            multiline: False
+            size_hint: 0.41, 0.11
+            pos_hint: {"x":0.1, "top":0.5}
+            font_size: (root.width**2 + root.height**2) / 14**4
+            
+        TextInput:                                  ### ENTRADA DE TEXTO PARA AREA
+            id: area
+            hint_text: "   Ingrese su Area"
+            size_hint: 0.41, 0.11
+            multiline: False
+            pos_hint: {"x":0.1, "top":0.35}
+            font_size: (root.width**2 + root.height**2) / 14**4
+            
+        TextInput:                                  ### ENTRADA DE TEXTO PARA CONTRASEÑA
+            id: passw
+            hint_text: "   Ingrese su Password*"
+            size_hint: 0.41, 0.11
+            multiline: False
+            password: True
+            pos_hint: {"x":0.1, "top":0.2}
+            font_size: (root.width**2 + root.height**2) / 14**4
+            
+        Label:                                          ### ETIQUETA DE ADMINISTRADOR                                
+            markup: True
+            size_hint: 0.5,0.12
+            pos_hint: {"x":0.5, "y":0.2}
+            text: "[color=#00FFDC][b]Root[/b][/color]"
+            font_size: (root.width**2 + root.height**2) / 16**4
+        
+        CheckBox:                                       ### ASIGNA PERMISOS DE ADMINISTRADOR
+            id: chk
+            size_hint: 0.2, 0.2
+            pos_hint: {"x":0.65, "y":0.1}
+                            
+        Button:                                         ### BOTON PARA REGISTRAR
+            background_normal: "like.png"                
+            pos_hint:{"x":0.65,"y":0.4}
+            size_hint:0.11, 0.19
+            on_release:
+                root.submit()
+                app.root.current = "main"
+                root.manager.transition.direction = "left"
+            
+        Button:                                           ### BOTON PARA REGRESAR
+            background_normal: "casa.png"                
+            pos_hint:{"x":0.85,"y":0.03}
+            size_hint:0.14, 0.2
+            on_release:
+                root.reset()
+                app.root.current = "main"
+                root.manager.transition.direction = "left"
+####################################################################################
+<Informa>:                                            ### VENTANA DE INFORMACION
+    name: "informa"
+    canvas.before:                                
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: "puntos.jpg"                                ### DEFINE EL FONDO
+    BoxLayout:    
+        orientation: 'vertical'           
+        ActionBar:
+            ActionView:
+                ActionPrevious:
+                    app_icon: 'avatar.png'
+                    title:'Acerca de ...'
+                    on_release:
+                        app.root.current = "login"
+                        root.manager.transition.direction = "left"    
+        Label:
+            id: screen
+            text: ""
+####################################################################################
+
+####################################################################################       
+        # 1, 1, 1, 1 BLANCO
+       # .5, 1, 1, 1 AZUL CLARO
+      #  .5, .5, 1, 1 AZUL
+       # .5, .5, .5, 1 GRIS
+       # 1, .5, .5, 1 NARANJA
+        #1, 1, .5, 1 AMARILLO
+        
